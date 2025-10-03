@@ -1,4 +1,4 @@
-class StringHandler:
+class MyString:
     def __init__(self):
         self.text = ""   
 
@@ -10,6 +10,6 @@ class StringHandler:
         
         print(self.text.upper())
 
-obj = StringHandler()
+obj = MyString()
 obj.getString()      
 obj.printString()    
