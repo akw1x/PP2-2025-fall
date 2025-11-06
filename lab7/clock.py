@@ -10,6 +10,7 @@ clock = pygame.time.Clock()
 
 leftarm = pygame.image.load("/Users/adelkikbai/Desktop/code/pp2/lab7/images/leftarm.png")
 rightarm = pygame.image.load("/Users/adelkikbai/Desktop/code/pp2/lab7/images/rightarm.png")
+harm = pygame.image.load("/Users/adelkikbai/Desktop/code/pp2/lab7/images/leftarm.png")
 mainclock = pygame.transform.scale(pygame.image.load("/Users/adelkikbai/Desktop/code/pp2/lab7/images/clock.png"), (800, 600))
 
 
@@ -22,9 +23,11 @@ while run:
     now = datetime.datetime.now()
     s = now.second
     m = now.minute
+    h = now.hour
 
     s_angle = s * 6
     m_angle = m * 6 + 45
+    h_angle = h * 6
 
     screen.blit(mainclock, (0,0))
 
@@ -41,6 +44,13 @@ while run:
     )
     leftarmrect = rotated_leftarm.get_rect(center = (800 // 2 , 600 // 2))
     screen.blit(rotated_leftarm, leftarmrect)
+
+    rotated_harm = pygame.transform.rotate(
+        pygame.transform.scale(harm, (100, 200)),
+        -h_angle
+    )
+    harmrect = rotated_harm.get_rect(center = (800 // 2, 600 // 2))
+    screen.blit(rotated_harm, harmrect)
     
     pygame.display.flip()
     clock.tick(60)

@@ -12,6 +12,7 @@ y = height // 2
 speed = 20
 color = (255,0,0)
 bg = (255,255,255)
+clock = pygame.time.Clock()
 
 run = True 
 while run:
@@ -41,5 +42,6 @@ while run:
     pygame.draw.circle(screen, color, (x,y), radius)
     pygame.display.flip()
 
+    clock.tick()
 
 pygame.quit()
