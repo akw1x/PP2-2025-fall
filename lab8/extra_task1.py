@@ -45,7 +45,7 @@ class Enemy(pygame.sprite.Sprite):
  
       def move(self):
         global SCORE
-        self.rect.move_ip(0,SPEED)
+        self.rect.move_ip(0, SPEED)
         if (self.rect.top > 600):
             SCORE += 1
             self.rect.top = 0
@@ -113,8 +113,8 @@ pygame.time.set_timer(INC_SPEED, 1000)
  
 #Game Loop
 while True:
-       
-    #Cycles through all events occurring  
+    
+      
     for event in pygame.event.get():
         if event.type == INC_SPEED:
               SPEED += 0.5     
