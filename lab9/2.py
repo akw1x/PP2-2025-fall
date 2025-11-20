@@ -21,6 +21,9 @@ big_font = pygame.font.SysFont("Verdana", 50)
 snake = [(100,100), (80,100), (60,100)]
 direction = "RIGHT"
 food = (200,100)
+food_weight = random.choice ([1,2,3])
+food_timer = pygame.time.get_ticks()
+food_lifetime = 5000
 score = 0
 speed = 5
 level = 1
@@ -76,14 +79,24 @@ while True:
     snake.insert(0, new_head)
 
     if snake[0] == food:
-        score += 1
+        score += food_weight
         food = gen_food()
+        food_weight = random.choice([1,2,3])
+
+        food_timer = pygame.time.get_ticks()
 
         if score % 4 == 0:
             level += 1
             speed += 2
     else:
         snake.pop()
+
+    current_time = pygame.time.get_ticks()
+
+    if current_time - food_timer > food_lifetime:
+        food = gen_food()
+        food_weight = random.choice([1,2,3])
+        food_timer = pygame.time.get_ticks()
 
     if head_x < 0 or head_x >= w or head_y < 0 or head_y >= h:
         screen.fill(red)
@@ -106,10 +119,18 @@ while True:
     for x,y in snake:
         pygame.draw.rect(screen, green, (x,y, cell_size, cell_size))
 
-    pygame.draw.rect(screen, red, (food[0], food[1], cell_size, cell_size))
+    if food_weight == 1:
+        food_color = (255,0,0)
+    elif food_weight == 2:
+        food_color = (255,255,0)
+    elif food_weight == 3:
+        food_color = (180,0,255)
 
-    corner_text(str(score), font, white, 10, 10)
-    corner_text(str(level), font, white, w - 100, 10)
+    pygame.draw.rect(screen, food_color, (food[0], food[1], cell_size,cell_size))
+    
+
+    corner_text("Score:" + str(score), font, white, 10, 10)
+    corner_text("Level:" + str(level), font, white, w - 100, 10)
 
     pygame.display.update()
     fps.tick(speed)

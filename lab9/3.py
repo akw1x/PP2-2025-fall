@@ -1,4 +1,5 @@
 import pygame
+import sys
 
 def main():
     pygame.init()
@@ -6,11 +7,8 @@ def main():
     clock = pygame.time.Clock()
     
     radius = 15
-    x = 0
-    y = 0
     mode = 'blue'
     tool = 'brush'
-    points = []
     
     while True:
         
@@ -21,7 +19,6 @@ def main():
         
         for event in pygame.event.get():
             
-            # determin if X was clicked, or Ctrl+W or Alt+F4 was used
             if event.type == pygame.QUIT:
                 return
             if event.type == pygame.KEYDOWN:
@@ -32,7 +29,6 @@ def main():
                 if event.key == pygame.K_ESCAPE:
                     return
             
-                # determine if a letter key was pressed
                 if event.key == pygame.K_r:
                     mode = 'red'
                 elif event.key == pygame.K_g:
@@ -50,14 +46,33 @@ def main():
                     tool = 'circle'
                 elif event.key == pygame.K_4:
                     tool = 'eraser'
+                elif event.key == pygame.K_5:
+                    tool = 'square'
+                elif event.key == pygame.K_6:
+                    tool = 'right_triangle'
+                elif event.key == pygame.K_7:
+                    tool = 'equilateral_triangle'
+                elif event.key == pygame.K_8:
+                    tool = 'rhombus'
             
             if event.type == pygame.MOUSEBUTTONDOWN:
-
                 if tool == 'rect':
                     draw_rect(screen, event.pos, radius, mode)
 
                 if tool == 'circle':
                     draw_circle(screen, event.pos, radius, mode)
+
+                if tool == 'square':
+                    draw_square(screen, event.pos, radius, mode)
+
+                if tool == 'right_triangle':
+                    draw_right_triangle(screen, event.pos, radius, mode)
+
+                if tool == 'equilateral_triangle':
+                    draw_equilateral_triangle(screen, event.pos, radius, mode)
+
+                if tool == 'rhombus':
+                    draw_rhombus(screen, event.pos, radius, mode)
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
@@ -66,56 +81,69 @@ def main():
                     radius = max(1, radius - 1)        
             
             if event.type == pygame.MOUSEMOTION:
-                # if mouse moved, add point to list
                 position = event.pos
+
                 if tool == 'brush':
-                    points = points + [position]
-                    points = points[-256:]
+                    pygame.draw.circle(screen, get_color(mode), position, radius)
 
                 elif tool == 'eraser':
                     pygame.draw.circle(screen, (0,0,0), position, radius)
-            
-        if tool == 'brush':
-            i = 0
-            while i < len(points) - 1:
-                drawLineBetween(screen, i, points[i], points[i + 1], radius, mode)
-                i += 1
         
         pygame.display.flip()
         clock.tick(60)
 
-def drawLineBetween(screen, index, start, end, width, color_mode):
-    c1 = max(0, min(255, 2 * index - 256))
-    c2 = max(0, min(255, 2 * index))
-    
-    if color_mode == 'blue':
-        color = (c1, c1, c2)
-    elif color_mode == 'red':
-        color = (c2, c1, c1)
-    elif color_mode == 'green':
-        color = (c1, c2, c1)
-    elif color_mode == 'pink':
-        color = (c2, c1 // 2, c2)
-    
-    dx = start[0] - end[0]
-    dy = start[1] - end[1]
-    iterations = max(abs(dx), abs(dy))
-    
-    for i in range(iterations):
-        progress = 1.0 * i / iterations
-        aprogress = 1 - progress
-        x = int(aprogress * start[0] + progress * end[0])
-        y = int(aprogress * start[1] + progress * end[1])
-        pygame.draw.circle(screen, color, (x, y), width)
 
 def draw_rect(screen, position, radius, color_mode):
     color = get_color(color_mode)
-    rect = pygame.Rect(position[0]-radius, position[1]-radius, radius*2, radius*2)
+    x, y = position
+
+    size = radius * 2
+    rect = pygame.Rect(x - radius, y - radius, size, size)
     pygame.draw.rect(screen, color, rect, 2)
 
-def draw_circle(screen, position, radius, color_mode,):
+def draw_circle(screen, position, radius, color_mode):
     color = get_color(color_mode)
-    pygame.draw.circle(screen, color, position, radius, 2)
+    x, y = position
+
+    pygame.draw.circle(screen, color, (x, y), radius, 2)
+
+def draw_square(screen,position,radius,color_mode):
+    color = get_color(color_mode)
+    x, y = position
+    side = radius * 2 
+    rect = pygame.Rect (x-radius, y - radius, side, side)
+    pygame.draw.rect(screen, color, rect, 2)
+
+def draw_right_triangle(screen, position, radius, color_mode):
+    color = get_color(color_mode)
+    x, y = position
+
+    p1 = (x, y)
+    p2 = (x + radius, y)
+    p3 = (x, y - radius)
+
+    pygame.draw.polygon(screen, color, [p1, p2, p3], 2)
+
+def draw_equilateral_triangle(screen, position, radius, color_mode):
+    color = get_color(color_mode)
+    x, y = position
+
+    p1 = (x, y - radius)
+    p2 = (x - radius, y + radius)
+    p3 = (x + radius, y + radius)
+
+    pygame.draw.polygon(screen, color, [p1, p2, p3], 2)
+
+def draw_rhombus(screen, position, radius, color_mode):
+    color = get_color(color_mode)
+    x, y = position
+    
+    top = (x, y - radius)
+    bottom = (x, y + radius)
+    left = (x - radius, y)
+    right = (x + radius, y)
+
+    pygame.draw.polygon(screen, color, [top, right, bottom, left], 2)
 
 def get_color(color_mode):
     if color_mode == 'red':

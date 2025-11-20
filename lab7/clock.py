@@ -27,7 +27,6 @@ while run:
 
     s_angle = s * 6
     m_angle = m * 6 + 45
-    h_angle = h * 6
 
     screen.blit(mainclock, (0,0))
 
@@ -44,13 +43,6 @@ while run:
     )
     leftarmrect = rotated_leftarm.get_rect(center = (800 // 2 , 600 // 2))
     screen.blit(rotated_leftarm, leftarmrect)
-
-    rotated_harm = pygame.transform.rotate(
-        pygame.transform.scale(harm, (100, 200)),
-        -h_angle
-    )
-    harmrect = rotated_harm.get_rect(center = (800 // 2, 600 // 2))
-    screen.blit(rotated_harm, harmrect)
     
     pygame.display.flip()
     clock.tick(60)
